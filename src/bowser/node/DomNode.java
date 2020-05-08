@@ -16,6 +16,8 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
 
+import ox.Log;
+
 public class DomNode {
 
   private static final CharMatcher IS_NEWLINE = CharMatcher.is('\n');
@@ -222,7 +224,27 @@ public class DomNode {
     if (defer) {
       s.attribute("defer");
     }
-    return add(s);    
+    if (isDuplicateJS(s)) {
+      return this;
+    } else {
+      return add(s);
+    }
+  }
+
+  private boolean isDuplicateJS(DomNode s) {
+    for (DomNode child : this.getChildren()) {
+      try {
+        if (!"script".equals(child.tag) || !child.hasAttribute("src")
+            || !child.getAttribute("src").equals(s.getAttribute("src"))) {
+          continue;
+        }
+      } catch (Exception e) {
+        Log.debug("We are here.");
+      }
+      // checkState(child.hasAttribute("defer") == s.hasAttribute("defer"));
+      return true;
+    }
+    return false;
   }
 
   public DomNode css(String name) {

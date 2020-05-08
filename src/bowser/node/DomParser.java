@@ -68,7 +68,7 @@ public class DomParser {
     int endTag = s.indexOf('>', start);
 
     String tagData = s.substring(start + 1, endTag);
-    List<String> m = split(tagData, ' ');
+    List<String> m = split(tagData, ' '); // Note: this split escapes " characters.
 
     DomNode node = new DomNode(m.get(0));
     for (int i = 1; i < m.size(); i++) {
@@ -97,7 +97,8 @@ public class DomParser {
           || node.tag.equalsIgnoreCase("code") || node.tag.equalsIgnoreCase("svg")) {
         node.add(new TextNode(s.substring(endTag + 1, endTagIndex)));
       } else {
-        parse(head, node, s, endTag + 1, endTagIndex); // add a child
+        parse(head, node, s, endTag + 1, endTagIndex); // Recursive step: parse the children of a node, adding them to
+                                                       // the node.
       }
       endTag = endTagIndex + 2 + node.tag.length();
     }
