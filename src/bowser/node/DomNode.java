@@ -231,11 +231,10 @@ public class DomNode {
 
   private boolean isDuplicateJS(DomNode s) {
     for (DomNode child : this.getChildren()) {
-      if (!"script".equals(child.tag) || !child.hasAttribute("src")
-          || !child.getAttribute("src").equals(s.getAttribute("src"))) {
-        continue;
+      if ("script".equals(child.tag) && child.hasAttribute("src")
+          && child.getAttribute("src").equals(s.getAttribute("src"))) {
+        return true;
       }
-      return true;
     }
     return false;
   }
