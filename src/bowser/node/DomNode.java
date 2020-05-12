@@ -6,6 +6,7 @@ import static com.google.common.base.Preconditions.checkState;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 import java.util.function.Function;
 import java.util.function.Predicate;
@@ -222,17 +223,16 @@ public class DomNode {
     if (defer) {
       s.attribute("defer");
     }
-    if (isDuplicateJS(s)) {
+    if (isDuplicateJS(name)) {
       return this;
     } else {
       return add(s);
     }
   }
 
-  private boolean isDuplicateJS(DomNode s) {
+  private boolean isDuplicateJS(String jsSrc) {
     for (DomNode child : this.getChildren()) {
-      if ("script".equals(child.tag) && child.hasAttribute("src")
-          && child.getAttribute("src").equals(s.getAttribute("src"))) {
+      if ("script".equals(child.tag) && Objects.equals(child.getAttribute("src"), jsSrc)) {
         return true;
       }
     }

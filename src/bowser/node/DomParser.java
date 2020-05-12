@@ -68,7 +68,7 @@ public class DomParser {
     int endTag = s.indexOf('>', start);
 
     String tagData = s.substring(start + 1, endTag);
-    List<String> m = split(tagData, ' '); // Note: this split escapes " characters.
+    List<String> m = split(tagData, ' ');
 
     DomNode node = new DomNode(m.get(0));
     for (int i = 1; i < m.size(); i++) {
@@ -97,8 +97,8 @@ public class DomParser {
           || node.tag.equalsIgnoreCase("code") || node.tag.equalsIgnoreCase("svg")) {
         node.add(new TextNode(s.substring(endTag + 1, endTagIndex)));
       } else {
-        parse(head, node, s, endTag + 1, endTagIndex); // Recursive step: parse the children of a node, adding them to
-                                                       // the node.
+        // Recursive step: parse the children of a node, adding them to the node.
+        parse(head, node, s, endTag + 1, endTagIndex);
       }
       endTag = endTagIndex + 2 + node.tag.length();
     }
@@ -149,6 +149,10 @@ public class DomParser {
     }
   }
 
+  /**
+   * Same as a normal string split, except it doesn't split if inside a quoted literal. Important for things like
+   * class="big red" href="blah.com", as we don't want to split apart "big red" at the space.
+   */
   private static List<String> split(String s, char z) {
     List<String> ret = Lists.newArrayList();
     StringBuilder sb = new StringBuilder();
